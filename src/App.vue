@@ -8,11 +8,13 @@
 <script>
 
 import router from "@/router/router";
+import store from "@/store";
 import SiteHeader from "@/components/SiteHeader";
 
 export default {
   name: 'App',
   router: router,
+  store: store,
   components: {
     SiteHeader,
   }
