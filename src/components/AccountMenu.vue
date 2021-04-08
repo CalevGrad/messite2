@@ -5,7 +5,7 @@
       <div id="descr-id">id: {{ currentUser.id }}</div>
     </div>
     <button id="button-exit" class="exit-button"
-            v-on:click="$emit('click-exit-button')"
+      v-on:click="logout"
     >
       Выйти
     </button>
@@ -21,6 +21,12 @@ export default {
     ...mapState('auth', {
       currentUser: (state) => state.currentUser,
     }),
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('auth/logout')
+      await this.$router.push('/login')
+    }
   }
 }
 </script>

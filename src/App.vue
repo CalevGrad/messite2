@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app" class="center-block">
     <SiteHeader/>
     <router-view/>
   </div>
@@ -17,7 +17,7 @@ export default {
   store: store,
   components: {
     SiteHeader,
-  }
+  },
 }
 </script>
 

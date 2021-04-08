@@ -1,9 +1,10 @@
 import Vue from 'vue'
 
+import store from "@/store";
 import Router from 'vue-router'
 import Login from "@/views/Login";
 import Mail from "@/views/Mail";
-import store from "@/store";
+import Registration from "@/views/Registration";
 
 Vue.use(Router)
 
@@ -23,25 +24,36 @@ let router = new Router({
             component: Login,
             beforeEnter: async (to, from, next) => {
                 if (store.getters['auth/isLoggedIn']) {
-                    await store.dispatch('auth/logout')
-                }
-                next()
+                    next('')
+                } else next()
             },
-        }
+            meta: {
+                requiresAuth: false,
+            }
+        },
+        {
+            path: '/registration',
+            name: 'registration',
+            component: Registration,
+        },
+        {
+            path: '*',
+            name: '404',
+            beforeEnter: async (to, from, next) => {
+                next('')
+            }
+        },
     ]
 })
 
 router.beforeEach((to, from, next) => {
-    // if (to.matched.some((record) => record.meta.requiresAuth)) {
-    //     store.dispatch('auth/fetchCurrentUser').then(next)
-    // }
     if (
-        to.name !== '/login' &&
-        to.name !== '/registration' &&
         to.matched.some((record) => record.meta.requiresAuth) &&
         !store.getters['auth/isLoggedIn']
     ) {
         next({ path: '/login', replace: false })
+    } else if (to.matched.some((record) => record.meta.requiresAuth)) {
+        store.dispatch('auth/getCurrentUser').then(next)
     } else {
         next()
     }

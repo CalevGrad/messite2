@@ -1,12 +1,14 @@
 import tokenService from '../services/token.service'
-import authentification from '../api/auth'
+import authentication from '../api/auth'
 
 let auth = {
+    namespaced: true,
     state: {
-        accessToken: tokenService.getToken() || '',
+        accessToken: tokenService.getAccessToken() || '',
         refreshToken: tokenService.getRefreshToken() || '',
         currentUser: {},
     },
+
     mutations: {
         setAccessToken(state, accessToken) {
             state.accessToken = accessToken
@@ -22,10 +24,11 @@ let auth = {
             state.refreshToken = ''
         }
     },
+
     actions: {
         async signIn({commit}, payload) {
             const { username, password } ={ ...payload }
-            const response = await authentification.signIn(username, password)
+            const response = await authentication.signIn(username, password)
 
             tokenService.setAccessToken(response.data.access)
             tokenService.setRefreshToken(response.data.refresh)
@@ -34,7 +37,7 @@ let auth = {
             commit('setRefreshToken', response.data.refresh)
         },
         async getNewAccessToken({commit, state}) {
-            const response = await  authentification.refresh({ 'refresh': state.refresh })
+            const response = await  authentication.refresh({ 'refresh': state.refresh })
             commit('setAccessToken', response.data.access)
         },
         logout({commit}) {
@@ -43,9 +46,14 @@ let auth = {
             tokenService.removeAccessToken()
             tokenService.removeRefreshToken()
         },
+        async getCurrentUser({commit}) {
+            const response = await authentication.getCurrentUser()
+            commit('setCurrentUser', response.data)
+        }
     },
+
     getters: {
-        isLoggedIn: (state) =>!!state.accessToken
+        isLoggedIn: (state) => !!state.accessToken,
     },
 }
 

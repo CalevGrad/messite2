@@ -336,6 +336,14 @@ button {
     border-radius: 5px;
 }
 
+.notfound {
+    margin-top: 150px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    color: #484848;
+}
+
 .auth-text {
     font-size: 20px;
     text-align: center;

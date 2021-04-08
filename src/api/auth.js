@@ -1,11 +1,20 @@
 import server from "@/api/server";
 
 const signIn = (username, password) => {
-    return server.post('/token', {username, password})
+    return server.post('auth/token/', {username, password})
+}
+
+const signUp = (username, password) => {
+    return server.post('auth/users/', {username, password})
 }
 
 const refresh = (refresh) => {
-    return server.post('/token/refresh', {refresh})
+    console.log(refresh)
+    return server.post('auth/token/refresh/', refresh)
 }
 
-export default { signIn, refresh }
+const getCurrentUser = () => {
+    return server.get('current-user/')
+}
+
+export default { signIn, signUp, refresh, getCurrentUser }
