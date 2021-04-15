@@ -6,6 +6,14 @@
 </template>
 
 <script>
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    let dropdowns = document.getElementById("accountDropdown");
+      if (dropdowns.classList.contains('show')) {
+        dropdowns.classList.remove('show');
+      }
+  }
+}
 
 import router from "@/router/router";
 import store from "@/store";

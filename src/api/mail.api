@@ -1,0 +1,7 @@
+import serverApi from "@/api/server.api";
+
+const getDialogs = () => {
+    return serverApi.get('dialogs/all')
+}
+
+export default { getDialogs }

@@ -53,7 +53,8 @@ router.beforeEach((to, from, next) => {
     ) {
         next({ path: '/login', replace: false })
     } else if (to.matched.some((record) => record.meta.requiresAuth)) {
-        store.dispatch('auth/getCurrentUser').then(next)
+        next()
+        store.dispatch('auth/getCurrentUser').then()
     } else {
         next()
     }

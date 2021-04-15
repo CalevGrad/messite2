@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import Auth from '@/api/auth'
+import Auth from '@/api/auth.api'
 export default {
   name: "Registration",
   data() {

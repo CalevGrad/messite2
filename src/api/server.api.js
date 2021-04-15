@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from "@/store";
 import router from "@/router/router";
 
-let server = axios.create({
+let serverApi = axios.create({
     baseURL: `${process.env.VUE_APP_SERVER_PATH}/api`,
     headers: {
         Accept: 'application/json',
@@ -10,14 +10,14 @@ let server = axios.create({
     },
 })
 
-server.interceptors.response.use(null, responseErrorHandler)
+serverApi.interceptors.response.use(null, responseErrorHandler)
 
 async function responseErrorHandler(error) {
     const {response} = error
 
     if (response.status === 403 && response.data.code === 'token_not_valid') {
         await store.dispatch("auth/getNewAccessToken")
-        return server(error.config)
+        return serverApi(error.config)
     }
 
     if (response.status === 401 && response.data.code === 'token_not_valid') {
@@ -34,7 +34,7 @@ async function responseErrorHandler(error) {
     return Promise.reject(error)
 }
 
-server.interceptors.request.use((config) => {
+serverApi.interceptors.request.use((config) => {
     const token = store.state.auth.accessToken
     if (token) {
         config.headers.common['Authorization'] = `Bearer ${token}`
@@ -42,4 +42,4 @@ server.interceptors.request.use((config) => {
     return config
 })
 
-export default server
+export default serverApi

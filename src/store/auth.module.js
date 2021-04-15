@@ -1,5 +1,5 @@
 import tokenService from '../services/token.service'
-import authentication from '../api/auth'
+import authentication from '../api/auth.api'
 
 let auth = {
     namespaced: true,

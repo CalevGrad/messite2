@@ -1,10 +1,23 @@
 <template>
-<div></div>
+  <div class="main">
+
+    <DialogNavigation/>
+    <Chat/>
+
+  </div>
 </template>
 
 <script>
+import Chat from "@/components/Chat";
+import DialogNavigation from "@/components/DialogNavigation";
+
 export default {
-  name: "Mail"
+  name: "Mail",
+  components: {
+    Chat,
+    DialogNavigation
+  }
+
 }
 </script>
 
