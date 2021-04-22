@@ -1,19 +1,19 @@
 <template>
-  <div class="authorization" v-on:keyup.enter="registration">
-    <div class="auth-text">Регистрация</div>
+  <div class="registration" v-on:keyup.enter="registration">
+    <div class="reg-text">Регистрация</div>
     <div style="text-align: center;" class="red">
       {{ errorRegistration }}
     </div>
     <form @submit.prevent="registration">
-      <input type="login" id="username" class="auth-input" placeholder="Имя пользователя"
+      <input type="login" id="username" class="reg-input" placeholder="Имя пользователя"
              v-model="form.username"
       >
-      <input type="password" id="password" class="auth-input" placeholder="Пароль"
+      <input type="password" id="password" class="reg-input" placeholder="Пароль"
              v-model="form.password"
       >
-      <div class="auth-buttons">
-        <button id="button-enter" class="auth-button" type="submit">Регистрация</button>
-        <router-link to="/login" id="button-registration" class="auth-button">К авторизации</router-link>
+      <div class="reg-buttons">
+        <button id="button-enter" class="reg-button" type="submit">Регистрация</button>
+        <router-link to="/login" id="button-registration" class="reg-button">К авторизации</router-link>
       </div>
     </form>
   </div>
@@ -62,5 +62,67 @@ export default {
 <style scoped>
 .red {
   color: red;
+}
+
+.registration {
+  margin-top: 150px;
+  padding: 5px;
+  width: 300px;
+  min-height: 220px;
+  background: white;
+  border-radius: 5px;
+}
+
+.reg-text {
+  font-size: 20px;
+  text-align: center;
+  padding: 10px;
+}
+
+.reg-input {
+  width: 85%;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #d7d7d9;
+  border-radius: 5px;
+}
+
+.reg-input:focus {
+  outline: none;
+}
+
+.reg-buttons {
+  display: flex;
+  justify-content: left;
+  margin: 10px;
+}
+
+.reg-button {
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reg-button:focus {
+  outline: none;
+}
+
+#button-registration {
+  background: none;
+  color: #345255;
+}
+
+#button-registration:hover {
+  text-decoration: underline;
+}
+
+#button-enter {
+  background: #487175;
+  color: white;
+}
+
+#button-enter:hover {
+  background: #345255;
 }
 </style>

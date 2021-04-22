@@ -1,11 +1,11 @@
 <template>
   <div class="dropdown">
 
-    <button v-on:click="dropButtonClick" class="dropbtn">
+    <button v-on:click="dropButtonClick" v-click-outside="hideMenu" class="dropbtn">
       {{ currentUser.username }}<i class="fas fa-chevron-down"/>
     </button>
 
-    <div id="accountDropdown" ref="accountDropdown" class="dropdown-content unselectable">
+    <div class="dropdown-content unselectable" v-show="showMenu">
       <div class="dropDownItem">Настройки</div>
       <div class="dropDownItem" v-on:click="logout">Выйти</div>
     </div>
@@ -15,6 +15,7 @@
 
 <script>
 import {mapState} from "vuex";
+import ClickOutside from 'vue-click-outside'
 
 export default {
   name: "AccountMenu",
@@ -23,14 +24,25 @@ export default {
       currentUser: (state) => state.currentUser,
     }),
   },
+  data() {
+    return {
+      showMenu: false,
+    }
+  },
   methods: {
     async logout() {
       await this.$store.dispatch('auth/logout')
       await this.$router.push('/login')
     },
     dropButtonClick() {
-      this.$refs.accountDropdown.classList.toggle("show")
+      this.showMenu = !this.showMenu
+    },
+    hideMenu() {
+      this.showMenu = false
     }
+  },
+  directives: {
+    ClickOutside,
   }
 }
 </script>
@@ -72,7 +84,7 @@ i {
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-  display: none;
+  /*display: none;*/
   position: absolute;
   /*background-color: #f1f1f1;*/
   background-color: white;

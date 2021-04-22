@@ -1,8 +1,8 @@
 <template>
   <div class="main">
 
-    <DialogNavigation/>
-    <Chat/>
+    <DialogNavigation @click-dialog="dialogClicked"/>
+    <Chat :dialogId="currentDialogId"/>
 
   </div>
 </template>
@@ -16,11 +16,29 @@ export default {
   components: {
     Chat,
     DialogNavigation
+  },
+  data() {
+    return {
+      currentDialogId: -1,
+    }
+  },
+  methods: {
+    dialogClicked(id) {
+      this.currentDialogId = id
+    }
   }
-
 }
 </script>
 
 <style scoped>
-
+.main {
+  display: grid;
+  margin-top: 50px;
+  width: 900px;
+  height: 520px;
+  grid-template-columns: 2fr 4fr;
+  /*grid-gap: 1px;*/
+  grid-template-areas:
+    "left-block right-block";
+}
 </style>

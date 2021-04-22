@@ -30,5 +30,17 @@ export default {
 </script>
 
 <style scoped>
+.search-box {
+  margin: 10px 15px;
+  width: 100%;
+}
 
+.search {
+  border: 0;
+  width: 220px;
+}
+
+.search:focus  {
+  outline: none;
+}
 </style>

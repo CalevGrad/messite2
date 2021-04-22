@@ -4,4 +4,8 @@ const getDialogs = () => {
     return serverApi.get('dialogs/all')
 }
 
-export default { getDialogs }
+const getMessages = (messageId, countMessages, dialogId) => {
+    return serverApi.get('messages/', {params: {messageId, countMessages, dialogId}})
+}
+
+export default {getDialogs, getMessages}
