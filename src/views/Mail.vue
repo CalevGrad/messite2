@@ -2,7 +2,10 @@
   <div class="main">
 
     <DialogNavigation @click-dialog="dialogClicked"/>
-    <Chat :dialogId="currentDialogId"/>
+    <Chat
+        :dialogId="currentDialogId"
+        :username="usernameInterlocutor"
+    />
 
   </div>
 </template>
@@ -20,11 +23,13 @@ export default {
   data() {
     return {
       currentDialogId: -1,
+      usernameInterlocutor: '',
     }
   },
   methods: {
-    dialogClicked(id) {
+    dialogClicked(id, username) {
       this.currentDialogId = id
+      this.usernameInterlocutor = username
     }
   }
 }

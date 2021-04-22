@@ -1,24 +1,26 @@
 <template>
   <div class="right-block">
 
+    <div class="chat-header" v-if="showControls">
+
+      <span>{{username}}</span>
+
+    </div>
+
     <div id="messages-list" class="messages-box">
 
-      <Message
+      <MessageItem
           v-for="message of messages"
           :key="message.id"
           :date_create="message.date_create"
           :text="message.text"
+          :username="message.owner.username"
       />
 
     </div>
 
-    <div class="pen" v-if="dialogId > -1" v-on:keyup.ctrl.enter="clickSendButton">
+    <div class="pen" v-if="showControls" v-on:keyup.ctrl.enter="clickSendButton">
 
-<!--      <div id="send_text" class="pen-block-input" tabindex="0" contenteditable="true" role="textbox"-->
-<!--           aria-multiline="true"-->
-<!--           ref="sendTextInput"></div>-->
-
-<!--      <textarea class="pen-block-input"></textarea>-->
       <TextareaAutosize
           placeholder="Напишите сообщение..."
           ref="myTextarea"
@@ -28,26 +30,33 @@
           class="pen-block-input"
           rows="1"
       />
+
       <button class="send-button" v-on:click="clickSendButton">
         <i class="far fa-paper-plane"></i>
       </button>
 
     </div>
+
   </div>
 </template>
 
 <script>
-import Message from "@/components/Message";
+import MessageItem from "@/components/MessageItem";
+import mailApi from '@/api/mail.api'
 
 export default {
   name: "Chat",
   components: {
-    Message,
+    MessageItem,
   },
   props: {
     dialogId: {
       required: true,
       type: Number,
+    },
+    username: {
+      required: true,
+      type: String,
     }
   },
   data() {
@@ -58,7 +67,21 @@ export default {
   },
   methods: {
     clickSendButton() {
+      mailApi.newMessage({dialog: this.dialogId, text: this.inputMessage})
       this.inputMessage = ''
+    }
+  },
+  computed: {
+    showControls() {
+      return this.dialogId !== -1
+    },
+  },
+  watch: {
+    async dialogId (newId) {
+      console.log(newId)
+      let response = await mailApi.getMessages({count_messages: 10, dialog_id: newId})
+      console.log(response.data.results)
+      this.messages = response.data.results
     }
   }
 }
@@ -68,17 +91,28 @@ export default {
 .right-block {
   display: flex;
   flex-direction: column;
-  grid-area: right-block;
+  /*grid-area: right-block;*/
   background: white;
   /*border-radius: 0 5px 5px 0;*/
   height: inherit;
 }
 
+.chat-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #c9c9ca;
+  padding: 10px;
+  height: 40px;
+  font-weight: bold;
+  box-sizing: border-box;
+  /*width: 100%;*/
+}
+
 .messages-box {
   position: static;
-  height: 100%;
   overflow-y: auto;
   background-color: white;
+  flex:1;
 }
 
 .pen {
@@ -86,7 +120,7 @@ export default {
   justify-content: space-between;
   align-items: flex-end;
   border-top: 1px solid #c9c9ca;
-  grid-area: pen;
+  /*grid-area: pen;*/
   background-color: white;
   /*border-radius: 0 0 5px 0;*/
 }

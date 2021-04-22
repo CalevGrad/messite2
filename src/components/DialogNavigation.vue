@@ -50,11 +50,11 @@ export default {
     }),
   },
   methods: {
-    clickDialog(id) {
+    clickDialog(id, username) {
       if (this.currentDialogId === id)
         return
 
-      console.log(id)
+      console.log(`${id} ${username}`)
 
       let dia
       if (this.currentDialogId !== -1) {
@@ -66,7 +66,7 @@ export default {
       this.$set(dialog, "active", true)
       this.currentDialogId = id
 
-      this.$emit('click-dialog', id)
+      this.$emit('click-dialog', id, username)
     }
   },
 }
@@ -86,7 +86,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 39px;
-  grid-area: menu;
   background-color: white;
   border-radius: 5px 0 0 0;
   border-bottom: 1px solid #c9c9ca;

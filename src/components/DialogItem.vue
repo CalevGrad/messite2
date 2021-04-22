@@ -1,7 +1,7 @@
 <template>
   <div class="dialog"
        v-bind:class="{'dialog-active': active}"
-       v-on:click="$emit('click-dialog', id)"
+       v-on:click="$emit('click-dialog', id, username)"
   >
     <div class="dialog-username">{{ username }}</div>
     <div class="dialog-date">{{ date }}</div>

@@ -1,11 +1,15 @@
 import serverApi from "@/api/server.api";
 
 const getDialogs = () => {
-    return serverApi.get('dialogs/all')
+    return serverApi.get('dialogs/')
 }
 
-const getMessages = (messageId, countMessages, dialogId) => {
-    return serverApi.get('messages/', {params: {messageId, countMessages, dialogId}})
+const getMessages = (listParams) => {
+    return serverApi.get('messages/', {params: listParams})
 }
 
-export default {getDialogs, getMessages}
+const newMessage = (data) => {
+    return serverApi.post('messages/new', data)
+}
+
+export default {getDialogs, getMessages, newMessage}

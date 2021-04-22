@@ -1,16 +1,18 @@
 <template>
   <div class="message">
     <div class="message-top-block">
-      <div class="message-owner">{{ date_create }}</div>
-      <div class="message-date">{{ date_create }}</div>
+      <div class="message-owner">{{ username }}</div>
+      <div class="message-date">{{ date }}</div>
     </div>
     <div class="message-text" style="white-space: pre-line">{{ text }}</div>
   </div>
 </template>
 
 <script>
+import dateService from "@/services/date.service";
+
 export default {
-  name: "Message",
+  name: "MessageItem",
   props: {
     text: {
       required: true,
@@ -19,10 +21,19 @@ export default {
     },
     date_create: {
       required: true,
-      type: [String, Date],
+      type: String,
       default: new Date(),
     },
+    username: {
+      required: true,
+      type: String,
+    }
   },
+  computed: {
+    date() {
+      return dateService.matchDate(this.date_create)
+    }
+  }
 }
 </script>
 
