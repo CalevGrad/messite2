@@ -9,7 +9,6 @@ const signUp = (username, password) => {
 }
 
 const refresh = (refresh) => {
-    console.log(refresh)
     return serverApi.post('auth/token/refresh/', refresh)
 }
 

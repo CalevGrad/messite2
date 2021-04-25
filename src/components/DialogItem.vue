@@ -46,6 +46,8 @@ export default {
   },
   computed: {
     username() {
+      if (this.owners.length === 1)
+        return this.owners[0].username
       if (this.owners[0].id !== this.user.id)
         return this.owners[0].username
       else return this.owners[1].username

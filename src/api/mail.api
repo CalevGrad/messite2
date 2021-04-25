@@ -12,4 +12,8 @@ const newMessage = (data) => {
     return serverApi.post('messages/new', data)
 }
 
-export default {getDialogs, getMessages, newMessage}
+const searchUser = (listParams) => {
+    return serverApi.get('search-user/', {params: listParams})
+}
+
+export default {getDialogs, getMessages, newMessage, searchUser}

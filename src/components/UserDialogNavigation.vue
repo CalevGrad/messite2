@@ -2,10 +2,13 @@
   <div class="left-block">
 
     <div class="menu">
-      <Search/>
+      <Search
+          @search="search"
+          @stop-search="stopSearch"
+      />
     </div>
 
-    <div class="dialogs-box">
+    <div class="box" v-show="showDialogs">
       <DialogItem
           v-for="dialog of dialogs"
           :key="dialog.id"
@@ -18,6 +21,15 @@
       />
     </div>
 
+    <div class="box" v-show="!showDialogs">
+      <UserItem
+          v-for="user of users"
+          :key="user.id"
+          :id="user.id"
+          :username="user.username"
+      />
+    </div>
+
 
   </div>
 </template>
@@ -27,17 +39,21 @@ import DialogItem from "@/components/DialogItem";
 import Search from "@/components/Search";
 import mailApi from '@/api/mail.api'
 import {mapState} from "vuex";
+import UserItem from "@/components/UserItem";
 
 export default {
-  name: "DialogNavigation",
+  name: "UserDialogNavigation",
   components: {
     DialogItem,
     Search,
+    UserItem,
   },
   data() {
     return {
       dialogs: [],
+      users: [],
       currentDialogId: -1,
+      showDialogs: true,
     }
   },
   async mounted() {
@@ -67,6 +83,15 @@ export default {
       this.currentDialogId = id
 
       this.$emit('click-dialog', id, username)
+    },
+    async search(username) {
+      this.showDialogs = false
+      let response = await mailApi.searchUser({username: username})
+      this.users = response.data.results
+    },
+    stopSearch() {
+      this.users = []
+      this.showDialogs = true
     }
   },
 }
@@ -91,11 +116,10 @@ export default {
   border-bottom: 1px solid #c9c9ca;
 }
 
-.dialogs-box {
+.box {
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 480px;
-  grid-area: dialogs;
   background-color: white;
   /*border-radius: 0 0 0 5px;*/
 }

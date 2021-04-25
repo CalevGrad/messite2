@@ -13,7 +13,7 @@
       >
       <div class="auth-buttons">
         <button id="button-enter" class="auth-button" type="submit">Войти</button>
-        <router-link to="/registration" id="button-registration" class="auth-button">Регистрация</router-link>
+        <router-link to="/registration" id="button-authorization" class="auth-button">Регистрация</router-link>
       </div>
     </form>
   </div>
@@ -106,6 +106,15 @@ export default {
 
 .auth-input:focus {
   outline: none;
+}
+
+#button-authorization {
+  background: none;
+  color: #345255;
+}
+
+#button-authorization:hover {
+  text-decoration: underline;
 }
 
 #button-enter {

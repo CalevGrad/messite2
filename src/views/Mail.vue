@@ -1,7 +1,7 @@
 <template>
   <div class="main">
 
-    <DialogNavigation @click-dialog="dialogClicked"/>
+    <UserDialogNavigation @click-dialog="dialogClicked"/>
     <Chat
         :dialogId="currentDialogId"
         :username="usernameInterlocutor"
@@ -12,13 +12,13 @@
 
 <script>
 import Chat from "@/components/Chat";
-import DialogNavigation from "@/components/DialogNavigation";
+import UserDialogNavigation from "@/components/UserDialogNavigation";
 
 export default {
   name: "Mail",
   components: {
     Chat,
-    DialogNavigation
+    UserDialogNavigation
   },
   data() {
     return {

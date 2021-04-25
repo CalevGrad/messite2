@@ -17,7 +17,15 @@ async function responseErrorHandler(error) {
 
     if (response.status === 403 && response.data.code === 'token_not_valid') {
         await store.dispatch("auth/getNewAccessToken")
-        return serverApi(error.config)
+
+        let config = error.config
+        const token = store.state.auth.accessToken
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+
+        return serverApi(config)
     }
 
     if (response.status === 401 && response.data.code === 'token_not_valid') {
