@@ -1,9 +1,9 @@
 <template>
   <div class="dialog"
        v-bind:class="{'dialog-active': active}"
-       v-on:click="$emit('click-dialog', id, username)"
+       v-on:click="$emit('click-dialog', id, interlocutor)"
   >
-    <div class="dialog-username">{{ username }}</div>
+    <div class="dialog-username">{{ interlocutor.username }}</div>
     <div class="dialog-date">{{ date }}</div>
     <div class="dialog-text">
                   <span v-if="owner">Вы: </span>
@@ -45,12 +45,12 @@ export default {
     },
   },
   computed: {
-    username() {
+    interlocutor() {
       if (this.owners.length === 1)
-        return this.owners[0].username
+        return {id: this.owners[0].id, username: this.owners[0].username}
       if (this.owners[0].id !== this.user.id)
-        return this.owners[0].username
-      else return this.owners[1].username
+        return {id: this.owners[0].id, username: this.owners[0].username}
+      else return {id: this.owners[1].id, username: this.owners[1].username}
     },
     owner() {
       return this.user.id === this.last_message.owner.id;

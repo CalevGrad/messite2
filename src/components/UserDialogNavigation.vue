@@ -3,6 +3,7 @@
 
     <div class="menu">
       <Search
+          :stopSearchTrigger="stopSearchTrigger"
           @search="search"
           @stop-search="stopSearch"
       />
@@ -27,6 +28,8 @@
           :key="user.id"
           :id="user.id"
           :username="user.username"
+          :active="user.active"
+          @click-user="clickUser"
       />
     </div>
 
@@ -53,7 +56,9 @@ export default {
       dialogs: [],
       users: [],
       currentDialogId: -1,
+      currentUserId: -1,
       showDialogs: true,
+      stopSearchTrigger: false,
     }
   },
   async mounted() {
@@ -66,23 +71,52 @@ export default {
     }),
   },
   methods: {
-    clickDialog(id, username) {
+    clickDialog(id, interlocutor) {
       if (this.currentDialogId === id)
         return
 
-      console.log(`${id} ${username}`)
+      console.log(`${id} ${interlocutor.username}`)
 
-      let dia
+      this.setActiveDialog(id)
+
+      this.$emit('click-dialog', id, interlocutor)
+    },
+    clickUser(id, username) {
+      if (this.currentUserId === id)
+        return
+
+      console.log(`user ${id}`)
+
+      let lastUser
+      if (this.currentUserId !== -1) {
+        lastUser = this.users.find(t => t.id === this.currentUserId)
+        this.$set(lastUser, "active", false)
+      }
+
+      const user = this.users.find(t => t.id === id)
+      this.$set(user, "active", true)
+      this.currentUserId = id
+
+      mailApi.existDialog({user_id: id}).then((response) => {
+        console.log(response.data)
+        this.clickDialog(response.data.id, {id: id, username: username})
+        this.stopSearchTrigger = true
+        // this.setActiveDialog(response.data.id)
+      }).catch((error) => {
+        console.log(error.response)
+        this.$emit('click-dialog', -2, {id: id, username: username})
+      })
+    },
+    setActiveDialog(id) {
+      let lastDialog
       if (this.currentDialogId !== -1) {
-        dia = this.dialogs.find(t => t.id === this.currentDialogId)
-        this.$set(dia, "active", false)
+        lastDialog = this.dialogs.find(t => t.id === this.currentDialogId)
+        this.$set(lastDialog, "active", false)
       }
 
       const dialog = this.dialogs.find(t => t.id === id)
       this.$set(dialog, "active", true)
       this.currentDialogId = id
-
-      this.$emit('click-dialog', id, username)
     },
     async search(username) {
       this.showDialogs = false
@@ -91,6 +125,8 @@ export default {
     },
     stopSearch() {
       this.users = []
+      this.currentUserId = -1
+      this.stopSearchTrigger = false
       this.showDialogs = true
     }
   },

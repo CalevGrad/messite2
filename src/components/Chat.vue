@@ -57,6 +57,10 @@ export default {
     username: {
       required: true,
       type: String,
+    },
+    interlocutorId: {
+      required: true,
+      type: Number,
     }
   },
   data() {
@@ -67,7 +71,9 @@ export default {
   },
   methods: {
     clickSendButton() {
-      mailApi.newMessage({dialog: this.dialogId, text: this.inputMessage})
+      if (this.dialogId === -2)
+        mailApi.newDialog([], this.inputMessage)
+      else mailApi.newMessage({dialog: this.dialogId, text: this.inputMessage})
       this.inputMessage = ''
     }
   },
@@ -78,6 +84,14 @@ export default {
   },
   watch: {
     async dialogId (newId) {
+      if (newId === -1)
+        return
+
+      if (newId === -2) {
+        this.messages = []
+        return
+      }
+
       console.log(newId)
       let response = await mailApi.getMessages({count_messages: 10, dialog_id: newId})
       console.log(response.data.results)

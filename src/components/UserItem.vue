@@ -1,6 +1,7 @@
 <template>
   <div class="user"
-       v-on:click="$emit('click-user', )"
+       v-bind:class="{'user-active': active}"
+       v-on:click="$emit('click-user', id, username)"
   >
     <div class="user-username">{{ username }}</div>
   </div>
@@ -17,6 +18,11 @@ export default {
     id: {
       required: true,
       type: Number,
+    },
+    active: {
+      required: true,
+      type: Boolean,
+      default: () => false,
     }
   }
 }
@@ -53,5 +59,18 @@ export default {
 .user-username {
   grid-area: username;
   font-weight: 700;
+}
+
+.user-active {
+  color: white;
+  background: #58b6b9;
+}
+
+.user-active:hover {
+  background: #58b6b9;
+}
+
+.user-active .user-username {
+  color: white;
 }
 </style>

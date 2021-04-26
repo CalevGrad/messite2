@@ -9,7 +9,7 @@ const signUp = (username, password) => {
 }
 
 const refresh = (refresh) => {
-    return serverApi.post('auth/token/refresh/', refresh)
+    return serverApi.post('auth/token/refresh/', {refresh})
 }
 
 const getCurrentUser = () => {

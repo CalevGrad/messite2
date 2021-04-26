@@ -37,7 +37,7 @@ let auth = {
             commit('setRefreshToken', response.data.refresh)
         },
         async getNewAccessToken({commit, state}) {
-            const response = await  authentication.refresh({ 'refresh': state.refreshToken })
+            const response = await  authentication.refresh(state.refreshToken)
             tokenService.setAccessToken(response.data.access)
             commit('setAccessToken', response.data.access)
         },

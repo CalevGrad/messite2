@@ -4,7 +4,8 @@
     <UserDialogNavigation @click-dialog="dialogClicked"/>
     <Chat
         :dialogId="currentDialogId"
-        :username="usernameInterlocutor"
+        :username="interlocutorUsername"
+        :userId="interlocutorId"
     />
 
   </div>
@@ -23,13 +24,15 @@ export default {
   data() {
     return {
       currentDialogId: -1,
-      usernameInterlocutor: '',
+      interlocutorUsername: '',
+      interlocutorId: -1,
     }
   },
   methods: {
-    dialogClicked(id, username) {
+    dialogClicked(id, interlocutor) {
       this.currentDialogId = id
-      this.usernameInterlocutor = username
+      this.interlocutorUsername = interlocutor.username
+      this.interlocutorId = interlocutor.id
     }
   }
 }

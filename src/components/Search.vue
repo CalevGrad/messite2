@@ -13,6 +13,13 @@
 <script>
 export default {
   name: "Search",
+  props: {
+    stopSearchTrigger: {
+      required: true,
+      type: Boolean,
+      default: () => false,
+    }
+  },
   data() {
     return {
       searchText: '',
@@ -31,6 +38,12 @@ export default {
       if (this.searchText === '')
         return
       this.$emit('search', this.searchText)
+    }
+  },
+  watch: {
+    stopSearchTrigger (newVal) {
+      if (newVal)
+        this.cleanSearch()
     }
   }
 }
