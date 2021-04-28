@@ -1,7 +1,7 @@
 <template>
   <div class="dialog"
-       v-bind:class="{'dialog-active': active}"
-       v-on:click="$emit('click-dialog', id, interlocutor)"
+       v-bind:class="{'dialog-active': currentDialogId === id}"
+       v-on:click="$emit('click-dialog', id)"
   >
     <div class="dialog-username">{{ interlocutor.username }}</div>
     <div class="dialog-date">{{ date }}</div>
@@ -14,6 +14,7 @@
 
 <script>
 import dateService from '@/services/date.service'
+import {mapState} from "vuex";
 
 export default {
   name: "DialogItem",
@@ -60,7 +61,10 @@ export default {
     },
     text() {
       return this.last_message.text
-    }
+    },
+    ...mapState('mail', {
+      currentDialogId: state => state.currentDialogId
+    })
   },
 }
 </script>

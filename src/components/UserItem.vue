@@ -1,7 +1,7 @@
 <template>
   <div class="user"
        v-bind:class="{'user-active': active}"
-       v-on:click="$emit('click-user', id, username)"
+       v-on:click="$emit('click-user', id)"
   >
     <div class="user-username">{{ username }}</div>
   </div>

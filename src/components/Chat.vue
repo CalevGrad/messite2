@@ -3,7 +3,7 @@
 
     <div class="chat-header" v-if="showControls">
 
-      <span>{{username}}</span>
+      <span>{{ interlocutor.username }}</span>
 
     </div>
 
@@ -42,61 +42,37 @@
 
 <script>
 import MessageItem from "@/components/MessageItem";
-import mailApi from '@/api/mail.api'
+import {mapGetters, mapState} from "vuex";
 
 export default {
   name: "Chat",
   components: {
     MessageItem,
   },
-  props: {
-    dialogId: {
-      required: true,
-      type: Number,
-    },
-    username: {
-      required: true,
-      type: String,
-    },
-    interlocutorId: {
-      required: true,
-      type: Number,
-    }
-  },
   data() {
     return {
-      messages: [],
       inputMessage: '',
     }
   },
+  computed: {
+    ...mapState('mail', {
+      currentDialogId: state => state.currentDialogId,
+      messages: state => state.messages,
+      currentUserId: state => state.currentUserId
+    }),
+    ...mapGetters('mail', ['interlocutor']),
+    showControls() {
+      return this.currentDialogId !== -1 || this.currentUserId !== -1
+    },
+  },
   methods: {
     clickSendButton() {
-      if (this.dialogId === -2)
-        mailApi.newDialog([], this.inputMessage)
-      else mailApi.newMessage({dialog: this.dialogId, text: this.inputMessage})
+      this.$store.dispatch('mail/sendMessageOrCreateDialog', this.inputMessage)
       this.inputMessage = ''
     }
   },
-  computed: {
-    showControls() {
-      return this.dialogId !== -1
-    },
-  },
-  watch: {
-    async dialogId (newId) {
-      if (newId === -1)
-        return
-
-      if (newId === -2) {
-        this.messages = []
-        return
-      }
-
-      console.log(newId)
-      let response = await mailApi.getMessages({count_messages: 10, dialog_id: newId})
-      console.log(response.data.results)
-      this.messages = response.data.results
-    }
+  mounted() {
+    this.$store.dispatch('mail/getDialogs')
   }
 }
 </script>
@@ -126,7 +102,7 @@ export default {
   position: static;
   overflow-y: auto;
   background-color: white;
-  flex:1;
+  flex: 1;
 }
 
 .pen {

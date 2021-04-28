@@ -55,6 +55,7 @@ let auth = {
 
     getters: {
         isLoggedIn: (state) => !!state.accessToken,
+        getCurrentUser: (state) => state.currentUser
     },
 }
 

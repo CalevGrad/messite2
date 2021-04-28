@@ -1,12 +1,8 @@
 <template>
   <div class="main">
 
-    <UserDialogNavigation @click-dialog="dialogClicked"/>
-    <Chat
-        :dialogId="currentDialogId"
-        :username="interlocutorUsername"
-        :userId="interlocutorId"
-    />
+    <UserDialogNavigation/>
+    <Chat/>
 
   </div>
 </template>
@@ -21,20 +17,6 @@ export default {
     Chat,
     UserDialogNavigation
   },
-  data() {
-    return {
-      currentDialogId: -1,
-      interlocutorUsername: '',
-      interlocutorId: -1,
-    }
-  },
-  methods: {
-    dialogClicked(id, interlocutor) {
-      this.currentDialogId = id
-      this.interlocutorUsername = interlocutor.username
-      this.interlocutorId = interlocutor.id
-    }
-  }
 }
 </script>
 

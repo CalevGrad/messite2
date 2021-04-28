@@ -8,8 +8,8 @@ const getMessages = (listParams) => {
     return serverApi.get('messages/', {params: listParams})
 }
 
-const newMessage = (data) => {
-    return serverApi.post('messages/new', data)
+const newMessage = (dialog, text) => {
+    return serverApi.post('messages/new', {dialog, text})
 }
 
 const searchUser = (username) => {
