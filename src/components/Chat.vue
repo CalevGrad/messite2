@@ -14,7 +14,7 @@
           :key="message.id"
           :date_create="message.date_create"
           :text="message.text"
-          :username="message.owner.username"
+          :owner="message.owner"
       />
 
     </div>

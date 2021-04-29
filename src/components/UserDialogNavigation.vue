@@ -12,7 +12,6 @@
           :id="dialog.id"
           :owners="dialog.owners"
           :last_message="dialog.last_message"
-          :active="dialog.active"
           :user="currentUser"
           @click-dialog="clickDialog"
       />
@@ -20,7 +19,7 @@
 
     <div class="box" v-show="searching">
       <UserItem
-          v-for="user of users"
+          v-for="user of searchUsers"
           :key="user.id"
           :id="user.id"
           :username="user.username"
@@ -51,7 +50,7 @@ export default {
       currentUser: (state) => state.currentUser,
     }),
     ...mapState('mail', {
-      users: state => state.users,
+      searchUsers: state => state.searchUsers,
       dialogs: state => state.dialogs,
       currentDialogId: state => state.currentDialogId,
       currentUserId: state => state.currentUserId,

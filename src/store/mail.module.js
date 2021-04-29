@@ -5,6 +5,7 @@ let mail = {
     state: {
         dialogs: [],
         users: [],
+        searchUsers: [],
         messages: [],
         currentDialogId: -1,
         currentUserId: -1,
@@ -17,11 +18,14 @@ let mail = {
         setCurrentUserId(state, currentUserId) {
             state.currentUserId = currentUserId
         },
+        setUsers(state, users) {
+            state.users = users
+        },
         setDialogs(state, dialogs) {
             state.dialogs = dialogs
         },
-        setUsers(state, users) {
-            state.users = users
+        setSearchUsers(state, users) {
+            state.searchUsers = users
         },
         setMessages(state, messages) {
             state.messages = messages
@@ -29,14 +33,20 @@ let mail = {
         setSearching(state, value) {
             state.searching = value
         },
-        clearUsers(state) {
-            state.users = []
+        clearSearchUsers(state) {
+            state.searchUsers = []
         },
         clearSearchText(state) {
             state.searchText = ''
         },
         clearMessages(state) {
             state.messages = []
+        },
+        addDialog(state, dialog) {
+            state.dialogs.unshift(dialog)
+        },
+        addUser(state, user) {
+            state.users.push(user)
         },
     },
     actions: {
@@ -58,9 +68,9 @@ let mail = {
                 commit('setCurrentDialogId', -1)
 
             try {
-                let response = await mailApi.existDialog({user_id: id})
-                dispatch('stopSearchUser')
+                let response = await mailApi.existDialog(id)
                 dispatch('dialogClick', response.data.id)
+                dispatch('stopSearchUser')
             } catch(error) {
                 console.log(error)
                 if (error.response.status === 404) {
@@ -72,18 +82,21 @@ let mail = {
         async searchUser({commit}, text) {
             commit('setSearching', true)
             let response = await mailApi.searchUser(text)
-            commit('setUsers', response.data.results)
+            commit('setSearchUsers', response.data.results)
         },
         stopSearchUser({commit}) {
             commit('clearSearchText')
             commit('setSearching', false)
             commit('setCurrentUserId', -1)
-            commit('clearUsers')
+            commit('clearSearchUsers')
         },
-        async sendMessageOrCreateDialog({state, dispatch, rootGetters}, text) {
+        async sendMessageOrCreateDialog({commit, state, dispatch, rootGetters}, text) {
             if (state.currentDialogId === -1 && state.currentUserId !== -1) {
-                const user = state.users.find(t => t.id === state.currentUserId)
-                const response = await mailApi.newDialog([rootGetters['auth/getCurrentUser'], user], text)
+                const user = state.searchUsers.find(t => t.id === state.currentUserId)
+                const response = await mailApi.newDialog([rootGetters['auth/getCurrentUser'].id, user.id], text)
+
+                commit('addUser', user)
+                commit('addDialog', response.data)
                 dispatch('dialogClick', response.data.id)
                 dispatch('stopSearchUser')
             } else if (state.currentDialogId !== -1) {
@@ -92,6 +105,11 @@ let mail = {
         },
         async getDialogs({commit}) {
             const response = await mailApi.getDialogs()
+            let usersId = []
+            for (let dialog of response.data.results)
+                usersId.push(...dialog.owners)
+            const response1 = await mailApi.getUsers(usersId)
+            commit('setUsers', response1.data.results)
             commit('setDialogs', response.data.results)
         }
     },
@@ -99,14 +117,16 @@ let mail = {
         interlocutor: (state, getters, rootState, rootGetters) => {
             if (state.currentDialogId !== -1) {
                 const dialog = state.dialogs.find(t => t.id === state.currentDialogId)
-                if (dialog.owners.length === 1)
-                    return dialog.owners[0]
-                if (dialog.owners[0].id !== rootGetters['auth/getCurrentUser'].id)
-                    return dialog.owners[0]
-                else return dialog.owners[1]
+
+                if (dialog.owners.length === 1 || dialog.owners[0] !== rootGetters['auth/getCurrentUser'].id)
+                    return getters.getUser(dialog.owners[0])
+                else return getters.getUser(dialog.owners[1])
             } else if (state.currentUserId !== -1) {
-                return state.users.find(t => t.id === state.currentUserId)
+                return state.searchUsers.find(t => t.id === state.currentUserId)
             }
+        },
+        getUser: (state) => (id) => {
+            return state.users.find(t => t.id === id)
         },
     },
 }

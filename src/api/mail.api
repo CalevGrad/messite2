@@ -16,12 +16,17 @@ const searchUser = (username) => {
     return serverApi.get('search-user/', {params: {username}})
 }
 
-const existDialog = (listParams) => {
-    return serverApi.get('dialogs/exist', {params: listParams})
+const existDialog = (user_id) => {
+    return serverApi.get('dialogs/exist', {params: {user_id}})
 }
 
 const newDialog = (owners, first_message) => {
     return serverApi.post('dialogs/new', {owners, first_message})
 }
 
-export default {getDialogs, getMessages, newMessage, searchUser, existDialog, newDialog}
+const getUsers = (user_id_list) => {
+    return serverApi.get('users/', {params: {user_id_list}})
+}
+
+
+export default {getDialogs, getMessages, newMessage, searchUser, existDialog, newDialog, getUsers}

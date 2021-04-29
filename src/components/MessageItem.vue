@@ -24,14 +24,17 @@ export default {
       type: String,
       default: new Date(),
     },
-    username: {
+    owner: {
       required: true,
-      type: String,
+      type: Number,
     }
   },
   computed: {
     date() {
       return dateService.matchDate(this.date_create)
+    },
+    username() {
+      return this.$store.getters["mail/getUser"](this.owner).username
     }
   }
 }

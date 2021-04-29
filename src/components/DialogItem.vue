@@ -34,11 +34,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    active: {
-      required: true,
-      type: Boolean,
-      default: () => false,
-    },
     user: {
       type: Object,
       required: true,
@@ -47,11 +42,9 @@ export default {
   },
   computed: {
     interlocutor() {
-      if (this.owners.length === 1)
-        return {id: this.owners[0].id, username: this.owners[0].username}
-      if (this.owners[0].id !== this.user.id)
-        return {id: this.owners[0].id, username: this.owners[0].username}
-      else return {id: this.owners[1].id, username: this.owners[1].username}
+      if (this.owners.length === 1 || this.owners[0] !== this.user.id)
+        return this.$store.getters["mail/getUser"](this.owners[0])
+      else return this.$store.getters["mail/getUser"](this.owners[1])
     },
     owner() {
       return this.user.id === this.last_message.owner.id;
